@@ -3,10 +3,14 @@ package br.com.arc.studyaws.config;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSAsync;
+import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.messaging.config.SimpleMessageListenerContainerFactory;
+import io.awspring.cloud.messaging.core.NotificationMessagingTemplate;
 import io.awspring.cloud.messaging.core.QueueMessagingTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +22,7 @@ import org.springframework.messaging.converter.MessageConverter;
 
 @Configuration
 @Profile("localstack")
-public class SQSConfigLocalstack {
+public class AwsConfigLocalstack {
 
     @Value("${cloud.aws.region.static}")
     private String region;
@@ -42,6 +46,20 @@ public class SQSConfigLocalstack {
     }
 
     @Bean(destroyMethod = "shutdown")
+    @Primary
+    public AmazonSNSAsync amazonSNSAsync() {
+        return AmazonSNSAsyncClientBuilder.standard()
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region))
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))
+                .build();
+    }
+
+    @Bean
+    public NotificationMessagingTemplate notificationMessagingTemplate(AmazonSNSAsync amazonSNS) {
+        return new NotificationMessagingTemplate(amazonSNS);
+    }
+
+    @Bean
     public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory(AmazonSQSAsync amazonSqs) {
         SimpleMessageListenerContainerFactory factory = new SimpleMessageListenerContainerFactory();
         factory.setWaitTimeOut(20);
@@ -50,12 +68,12 @@ public class SQSConfigLocalstack {
         return factory;
     }
 
-    @Bean(destroyMethod = "shutdown")
+    @Bean
     public QueueMessagingTemplate queueMessagingTemplate() {
         return new QueueMessagingTemplate(amazonSQSAsync());
     }
 
-    @Bean(destroyMethod = "shutdown")
+    @Bean
     protected MessageConverter messageConverter(ObjectMapper objectMapper) {
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setObjectMapper(objectMapper);

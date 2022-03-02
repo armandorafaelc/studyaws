@@ -14,7 +14,7 @@ import org.springframework.messaging.converter.MessageConverter;
 
 @Configuration
 @Profile("!localstack")
-public class SQSConfig {
+public class AwsConfig {
 
     @Bean(destroyMethod = "shutdown")
     @Primary

@@ -4,8 +4,9 @@ Este projeto visa criar um estudo sobre a AWS e Localstack para execução de te
 
 ### Atualmente o projeto conta com as seguintes tecnologias:
 - SQS(Producer e Consumer);
+- SNS(Producer);
 - Endpoint ("/test") para envio de mensagens testes para verificação dos serviços;
-- Terraform (Subir localstack e criar serviço SQS);
+- Terraform (Subir localstack, criar serviço SQS e SNS, e subscrever o serviço SQS no tópico SNS);
 
 ### Configuração inicial
 

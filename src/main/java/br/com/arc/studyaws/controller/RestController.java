@@ -1,5 +1,6 @@
 package br.com.arc.studyaws.controller;
 
+import br.com.arc.studyaws.service.impl.SNSService;
 import br.com.arc.studyaws.service.impl.SQSService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-    private static String queue_name = "sqs-broadcast";
+    private static String queue_name = "topic_sns";
 
     @Autowired
-    private SQSService service;
+    private SNSService service;
 
     @GetMapping("/teste")
     public void getTeste() {
