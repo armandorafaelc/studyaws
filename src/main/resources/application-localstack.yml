@@ -1,0 +1,10 @@
+cloud:
+  aws:
+    region:
+      auto: false
+      static: sa-east-1
+    credentials:
+      access-key: 23123123123
+      secret-key: asduhasudashd123
+    sqs:
+      endpoint: http://localhost:4566
