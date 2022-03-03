@@ -24,6 +24,10 @@ Para executar um teste após o projeto subir, poderá chamar o seguinte endpoint
 http://localhost:8080/teste
 ```
 
+### Diagrama do projeto
+
+![study](https://user-images.githubusercontent.com/672980/156567408-a5b49be4-5538-43ae-b402-8ded5e2ff3fc.png)
+
 ### Serão necessários alguns softwares para configuração do projeto:
 -[Docker](https://www.docker.com/)   
 -[AWS Cli](https://aws.amazon.com/pt/cli/)   
