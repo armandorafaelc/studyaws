@@ -10,7 +10,20 @@ Este projeto visa criar um estudo sobre a AWS e Localstack para execução de te
 
 ### Configuração inicial
 
-Deverá setar o profile do spring para executar o perfil local:   
+#### Subindo serviço localstack: executar o comando abaixo, na pasta ("infra") e subir o localstack:
+
+```
+docker-compose up
+```
+
+#### Criar a infra local: executar o comando abaixo, na pasta ("infra/tf") e subir o localstack:
+
+```
+terraform  init
+terraform apply
+```
+
+#### Definir o profile do spring na IDE para executar o perfil local:   
 
 ```
 SPRING_PROFILES_ACTIVE=localstack
