@@ -3,6 +3,9 @@ package br.com.arc.studyaws.config;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSAsync;
 import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
@@ -19,6 +22,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
+import software.amazon.awssdk.awscore.client.builder.AwsAsyncClientBuilder;
+
+import java.util.Objects;
 
 @Configuration
 @Profile("localstack")
@@ -80,5 +86,26 @@ public class AwsConfigLocalstack {
         converter.setSerializedPayloadClass(String.class);
         converter.setStrictContentTypeMatch(false);
         return converter;
+    }
+
+    @Bean(destroyMethod = "shutdown")
+    @Primary
+    public AmazonDynamoDB dynamoDB() {
+        return AmazonDynamoDBClientBuilder.standard()
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region))
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))
+                .build();
+    }
+
+    @Bean
+    DynamoDBMapper dynamoDBMapper(){
+        return new DynamoDBMapper(dynamoDB());
+    }
+
+    private <BuilderT extends AwsClientBuilder<BuilderT, ClientT>, ClientT> AwsClientBuilder<BuilderT, ClientT> apply(String endpoint, AwsClientBuilder<BuilderT, ClientT> builder) {
+        if(Objects.nonNull(endpoint)){
+            builder .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region));
+        }
+        return builder;
     }
 }

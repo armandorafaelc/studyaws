@@ -45,3 +45,17 @@ resource "aws_sns_topic_subscription" "topic_to_sqs_target" {
   protocol  = "sqs"
   endpoint  = aws_sqs_queue.sqs-broadcast.arn
 }
+
+
+//-------------------------------------------------------- DYNAMODB TABLES
+resource "aws_dynamodb_table" "tb_processing" {
+  name           = "tb_processing"
+  read_capacity  = "20"
+  write_capacity = "20"
+  hash_key       = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+}
