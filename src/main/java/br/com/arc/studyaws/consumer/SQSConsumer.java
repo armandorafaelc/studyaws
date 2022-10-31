@@ -1,9 +1,6 @@
 package br.com.arc.studyaws.consumer;
 
 import br.com.arc.studyaws.consumer.dto.MessageDTO;
-import io.awspring.cloud.messaging.config.annotation.EnableSqs;
-import io.awspring.cloud.messaging.config.annotation.NotificationMessage;
-import io.awspring.cloud.messaging.listener.Acknowledgment;
 import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
 import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
